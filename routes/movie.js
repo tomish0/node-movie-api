@@ -102,17 +102,21 @@ router.put("/", (req, res) => {
     const correctMovie = movies.find((movie) => movie.id === updatedMovie.id);
     const updatedMovieKeys = Object.keys(updatedMovie);
     const correctMovieKeys = Object.keys(correctMovie);
-    let difference = correctMovieKeys.filter(
-      (key) => !updatedMovieKeys.includes(key)
+    let difference = updatedMovieKeys.filter(
+      (key) => !correctMovieKeys.includes(key)
     );
     movies[correctMovieIndex] = updatedMovie;
     if (difference.length > 0) {
-      res
-        .status(200)
-        .json(
-          `${JSON.stringify(difference)} was added to ${correctMovie.title}`
-        );
+      let fullBody = "";
+      difference.forEach((key) => {
+        fullBody += `${key}: ${updatedMovie[key]} `;
+      });
+      console.log(fullBody);
+
+      res.status(200).json(`${fullBody} was added to ${correctMovie.title}`);
     } else {
+      console.log(movies[0]);
+
       res.status(200).json(`${correctMovie.title} was updated`);
     }
   } else {
